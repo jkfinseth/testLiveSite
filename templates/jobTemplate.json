@@ -1,0 +1,10 @@
+{
+    "spreadsheet": {
+        "jobName": "Kasama",
+        "UsersAllocated": 3,
+        "users": ["justin", "omar", "eric"],
+        "message": "Hello World",
+        "includedImage": null,
+        "numbersOnSheet": ["+17023353384", "+17027858026", "+17028829990"]
+    }
+}

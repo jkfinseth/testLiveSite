@@ -1,0 +1,12 @@
+{
+    "allJobs": [
+        {
+            "jobName": "Kasama",
+            "visibleTo": ["justin", "omar", "eric"]
+        },
+        {
+            "jobName": "asddf",
+            "visibleTo": ["justin", "omar", "eric"]
+        }
+    ]
+}
