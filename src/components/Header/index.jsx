@@ -2,6 +2,12 @@ import './index.scss';
 
 export const Header = (props) => {
     const {name, setDisplay} = props;
+
+    const handleLogout = () => {
+        localStorage.removeItem('progchamp');
+        setDisplay(1);
+    }
+
     return (
         <div className = "HeaderBar">
             <div className = "selectable">
@@ -36,11 +42,11 @@ export const Header = (props) => {
                     </div>
                 </button>
             </div>
-            <button>
-                    <div className = "buttonBackground">
-                        <h3>{name}</h3>
-                    </div>
-                </button>
+            <button onClick = {() => handleLogout()}>
+                <div className = "buttonBackground">
+                    <h3>{name}</h3>
+                </div>
+            </button>
         </div>
     )
 }

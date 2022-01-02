@@ -7,7 +7,7 @@ export const EditMessage = (props) => {
     const {longMessage, setMessageContents, setLongMessage, displayImageInput, setImageURL, imageURL, setDisplayImageInput, messageContents} = props;
     const [messageSaved, setMessageSaved] = useState(0);
     const currentJob = JSON.parse(localStorage.getItem('currentJob'));
-    const keyName = 'message'+currentJob.selectedJob;
+    const keyName = 'message'+currentJob?.selectedJob;
     const [isJobSelected, setIsJobSelected] = useState(true);
     const [refresh, setRefresh] = useState(0);
 

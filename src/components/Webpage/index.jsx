@@ -146,7 +146,7 @@ export const MessagingSite = (props) => {
                 : displayState === 6
                 ? <UploadSpreadsheetPage setDisplayState = {setDisplayState}/>
                 :displayState === 7
-                ? <JobSettings />
+                ? <JobSettings setDisplayState = {setDisplayState}/>
                 : <div />     
                     }
             </div>

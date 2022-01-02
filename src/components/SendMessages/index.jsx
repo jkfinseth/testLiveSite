@@ -9,10 +9,10 @@ export const SendMessages = (props) => {
     const emptyString = '';
     const [firstMessage, setFirstMessage] = useState(true);
     const [previousKey, setPreviousKey] = useState('');
-    // const accountSid = "AC328815b6f17c750d80bedcc36bb5f3ce";
-    const accountSid = "ACf0660d83b54452dd82af793988b69485";
-    // const authToken = "90924da28b6854a695c34a12bac34e5a";
-    const authToken = "bf5cc12a2c492f49030aae72ef397e45";
+    // const accountSid = "AC328815b6f17c750d80bedcc36bb5f3ce"; // Primary Account
+    const accountSid = "ACf0660d83b54452dd82af793988b69485"; // Testing account
+    // const authToken = "90924da28b6854a695c34a12bac34e5a"; // Primary Account
+    const authToken = "bf5cc12a2c492f49030aae72ef397e45"; // Testing account
     var qs = require('qs');
     const twilio = require('twilio');
     const client = new twilio(accountSid, authToken);
@@ -25,6 +25,8 @@ export const SendMessages = (props) => {
         message = JSON.parse(localStorage.getItem("message"+currentJobKey.selectedJob));
         messagingList = JSON.parse(localStorage.getItem(currentJobKey.selectedJob));
     }
+    const [localPageState, setLocalPageState] = useState(0);
+    const [selectedNumber, setSelectedNumber] = useState(0);
 
     // Use Effect to determine on launch if message is the first one being sent
     useEffect (() => {
@@ -42,7 +44,12 @@ export const SendMessages = (props) => {
 
     const calculateSplits = (users, group) => {
         // Divide entries by the number of users covering the job, split
-        let start = group === 0? 0 : 
+        let start = group === 0? 0 : (messageList.length * group / users) + 1;
+        let end = messageList.length * group / users;
+        return ({
+            start: start,
+            end: end
+        });
     }
 
     const sendMessage = async(sendMessage) => {
@@ -133,44 +140,59 @@ export const SendMessages = (props) => {
         }
     }
 
-    return (
-        list !== null && displayLoaded
-            ?<div className = "page">
-                <div className = "SendMessage">
-                    <h2> Press page down to skip sending a message to the listed user. </h2>
-                    <h2> Would you like to message {list.PersonsList[list.PersonsList.length - 1].FirstName} {list.PersonsList[list.PersonsList.length - 1].LastName}?</h2>
-                    <button onClick = {() => {
-                    if (!sendingMessage || hasClicked >= 1) {
-                        console.log("setting sendMessage to true");
-                        setHasClicked(0);
-                        setSendingMessage(true);
-                        sendMessage(true);
-                    }}}> Yes </button>
-                    <button onClick = {() => {
-                        if (!sendingMessage || hasClicked >= 1) {
-                            setHasClicked(0);
-                            console.log("setting sendMessage to true");
-                        setSendingMessage(true);
-                        sendMessage(false);
-                    }}}> No </button>
-                    {/* <input onKeyDown = {(event) => {
-                    if (!sendingMessage || hasClicked >= 1) {
-                        setHasClicked(2);
-                        console.log("setting sendMessage to true");
-                        setSendingMessage(true);
-                        handleSendMessage(event);
-                    } else {
-                        setHasClicked(1);
-                    }}} value={emptyString}
-                        disabled = {true}
-                    /> */}
-                    <input onKeyDown = {(event) => {
-                        console.log("Hello World");
-                    }}
-                    />
-                    <button onClick = {() => handleSave()}> Save </button>
+    if (localPageState === 0) {
+        return (
+            <div className = "page">
+                <div className = "sectionSelection">
+                    <h3> Which part would you like to work on?</h3>
+                    {/* {for (let x = 0; x < jobSettings.usersAllocated; x++) {
+                        return (
+                            <button> Part {x} </button>
+                        )
+                    }} */}
                 </div>
             </div>
-            : <div />
-    )
+        )
+    } else {
+        return (
+            list !== null && displayLoaded
+                ?<div className = "page">
+                    <div className = "SendMessage">
+                        <h2> Press page down to skip sending a message to the listed user. </h2>
+                        <h2> Would you like to message {list.PersonsList[list.PersonsList.length - 1].FirstName} {list.PersonsList[list.PersonsList.length - 1].LastName}?</h2>
+                        <button onClick = {() => {
+                        if (!sendingMessage || hasClicked >= 1) {
+                            console.log("setting sendMessage to true");
+                            setHasClicked(0);
+                            setSendingMessage(true);
+                            sendMessage(true);
+                        }}}> Yes </button>
+                        <button onClick = {() => {
+                            if (!sendingMessage || hasClicked >= 1) {
+                                setHasClicked(0);
+                                console.log("setting sendMessage to true");
+                            setSendingMessage(true);
+                            sendMessage(false);
+                        }}}> No </button>
+                        {/* <input onKeyDown = {(event) => {
+                        if (!sendingMessage || hasClicked >= 1) {
+                            setHasClicked(2);
+                            console.log("setting sendMessage to true");
+                            setSendingMessage(true);
+                            handleSendMessage(event);
+                        } else {
+                            setHasClicked(1);
+                        }}} value={emptyString}
+                            disabled = {true}
+                        /> */}
+                        <input onKeyDown = {(event) => {
+                            console.log("Hello World");
+                        }}
+                        />
+                        <button onClick = {() => handleSave()}> Save </button>
+                    </div>
+                </div>
+                : <div />
+        )
+    }
 }
