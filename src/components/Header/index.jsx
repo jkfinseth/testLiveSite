@@ -26,7 +26,7 @@ export const Header = (props) => {
                         <h3>Upload Spreadsheet</h3>
                     </div>
                 </button>
-                <button>
+                <button onClick = {() => setDisplay(3)}>
                     <div className = "buttonBackground">
                         <h3>Send Messages</h3>
                     </div>
