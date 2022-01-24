@@ -9,10 +9,10 @@ export const SendMessages = (props) => {
     const emptyString = '';
     const [firstMessage, setFirstMessage] = useState(true);
     const [previousKey, setPreviousKey] = useState('');
-    // const accountSid = "AC328815b6f17c750d80bedcc36bb5f3ce"; // Primary Account
-    const accountSid = "ACf0660d83b54452dd82af793988b69485"; // Testing account
-    // const authToken = "90924da28b6854a695c34a12bac34e5a"; // Primary Account
-    const authToken = "bf5cc12a2c492f49030aae72ef397e45"; // Testing account
+    const accountSid = "AC328815b6f17c750d80bedcc36bb5f3ce"; // Primary Account
+    // const accountSid = "ACf0660d83b54452dd82af793988b69485"; // Testing account
+    const authToken = "90924da28b6854a695c34a12bac34e5a"; // Primary Account
+    // const authToken = "bf5cc12a2c492f49030aae72ef397e45"; // Testing account
     var qs = require('qs');
     const twilio = require('twilio');
     const client = new twilio(accountSid, authToken);

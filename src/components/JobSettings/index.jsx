@@ -6,6 +6,7 @@ export const JobSettings = (props) => {
     const [inputs, setInputs] = useState(0);
     const [numUsers, setNumUsers] = useState(0);
     const [jobIsSelected, setJobIsSelected] = useState(true);
+    const [loadedJobSettings, setLoadedJobSettings] = useState({});
     let jobSettings = '';
 
     // On launch, pull settings for currently selected job and 
@@ -16,12 +17,18 @@ export const JobSettings = (props) => {
         } else {
             // Pull up job settings
             jobSettings = JSON.parse(localStorage.getItem("settings"+selectedJob.selectedJob));
+            setLoadedJobSettings(jobSettings);
+            setInputs(jobSettings.messagesPerKeyPress);
+            setNumUsers(jobSettings.assignedUsers);
         }
-        console.log("Hello World");
     }, []);
 
     const handleSave = () => {
-        console.log('Hello World')
+        const selectedJob = JSON.parse(localStorage.getItem("currentJob"));
+        jobSettings = JSON.parse(localStorage.getItem("settings"+selectedJob.selectedJob));
+        jobSettings.messagesPerKeyPress = inputs;
+        jobSettings.assignedUsers = numUsers;
+        localStorage.setItem("settings"+selectedJob.selectedJob, JSON.stringify(jobSettings));
         setDisplayState(999);
     }
 
@@ -29,7 +36,7 @@ export const JobSettings = (props) => {
         jobIsSelected
         ? <div className = "jobSettingsPage">
             <div className = "inputsPerPress">
-                <label> Inputs per press: </label>
+                <label> Messages sent per press: </label>
                 <input value = {inputs} onChange = {(event) => setInputs(event.target.value)}/>
             </div>
             <div className = "workers">
