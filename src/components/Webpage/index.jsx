@@ -14,7 +14,7 @@ import { JobSettings } from "../JobSettings";
 
 export const MessagingSite = (props) => {
     const [isListSplit, setIsListSplit] = useState(false);
-    const [displayState, setDisplayState] = useState(4);
+    const [displayState, setDisplayState] = useState(999);
     const [longMessage, setLongMessage] = useState(false);
     const [messageContents, setMessageContents] = useState('');
     const [displayImageInput, setDisplayImageInput] = useState(true);
@@ -48,24 +48,24 @@ export const MessagingSite = (props) => {
         }
     }
     */
-    useEffect(() => {
-        // // See if a save state is stored in local memory
-        // const tempList = JSON.parse(localStorage.getItem('messagingList'));
-        // console.log(tempList);
-        // if (tempList !== '' && tempList !== null) {
-        //     setList(tempList);
-        //     setFirstMessage(false);
-        //     setDisplayLoaded(true);
-        //     setTimeout(() => {
-        //         setDisplayState(3);
-        //         setIsListSplit(true);
-        //     }, 1000);
-        // } else {
-        //     setDisplayState(1);
-        // }
-        setDisplayState(1);
+    // useEffect(() => {
+    //     // // See if a save state is stored in local memory
+    //     // const tempList = JSON.parse(localStorage.getItem('messagingList'));
+    //     // console.log(tempList);
+    //     // if (tempList !== '' && tempList !== null) {
+    //     //     setList(tempList);
+    //     //     setFirstMessage(false);
+    //     //     setDisplayLoaded(true);
+    //     //     setTimeout(() => {
+    //     //         setDisplayState(3);
+    //     //         setIsListSplit(true);
+    //     //     }, 1000);
+    //     // } else {
+    //     //     setDisplayState(1);
+    //     // }
+    //     setDisplayState(1);
 
-    }, []);
+    // }, []);
 
     const handleSplit = () => {
         let name = user;
@@ -108,7 +108,7 @@ export const MessagingSite = (props) => {
     const handleResetSite = () => {
         // Reset localStorage and displayState
         localStorage.removeItem('messagingList');
-        setDisplayState(1);
+        setDisplayState(999);
     }
 
 
@@ -119,19 +119,21 @@ export const MessagingSite = (props) => {
     // 3: message selection
     // 4: spreadsheet upload
     // 5: user settings (admin only)
+    console.log("Displaystate: ",displayState);
     if (displayState === 0) {
         <div className = "NightModeTesting">
 
         </div>
     } else if (displayState === 1) {
         return (<LoginPage user={user} setUser={setUser} setDisplayState={setDisplayState} setIsListSplit={setIsListSplit}/>)
+        // return (<div> Hello World </div>)
         // return(<Header name={"Justin"}/>);
     } else if (displayState >= 2) {
         return (
             <div className = "FullSiteDisplay">
                 <Header name={user} setDisplay={setDisplayState}/>
                 {displayState === 2
-                ? <EditMessage longMessage={longMessage} setMessageContents={setMessageContents} setLongMessage={setLongMessage} displayImageInput={displayImageInput} setImageURL={setImageURL} imageURL={imageURL} setDisplayImageInput={setDisplayImageInput} messageContents={messageContents}/>
+                ? <EditMessage longMessage={longMessage} setMessageContents={setMessageContents} setLongMessage={setLongMessage} displayImageInput={displayImageInput} setImageURL={setImageURL} imageURL={imageURL} setDisplayImageInput={setDisplayImageInput} messageContents={messageContents} setDisplayState = {setDisplayState}/>
                 :displayState === 3
                 ? <SendMessages list = {list} displayLoaded = {displayLoaded} setDisplayState = {setDisplayState} setList = {setList} messageList = {messageList}/>
                 : displayState === 4

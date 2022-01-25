@@ -2,9 +2,10 @@ import { MessageBox } from "../MessageBox"
 import { CheckBox } from "../CheckBox"
 import { ImageInput } from "../ImageInput"
 import React, { useState, useEffect } from "react";
+import './index.scss';
 
 export const EditMessage = (props) => {
-    const {longMessage, setMessageContents, setLongMessage, displayImageInput, setImageURL, imageURL, setDisplayImageInput, messageContents} = props;
+    const {longMessage, setMessageContents, setLongMessage, displayImageInput, setImageURL, imageURL, setDisplayImageInput, messageContents, setDisplayState} = props;
     const [messageSaved, setMessageSaved] = useState(0);
     const currentJob = JSON.parse(localStorage.getItem('currentJob'));
     const keyName = 'message'+currentJob?.selectedJob;
@@ -12,12 +13,15 @@ export const EditMessage = (props) => {
     const [refresh, setRefresh] = useState(0);
 
     useEffect(() => {
+        console.log("Hello World Use Effect");
         if (currentJob === null || currentJob === '') {
             // No job is selected, alert user that nothing is being edited
             setIsJobSelected(false);
         } else {
+            console.log("not broken 1");
             // Job is selected, see if info can be pulled
             const tempMessage = JSON.parse(localStorage.getItem(keyName));
+            console.log("not broken 2");
             if (tempMessage !== null && tempMessage !== '') {
                 // Message existed: fill blanks accordingly
                 setMessageContents(tempMessage.message);
@@ -27,6 +31,7 @@ export const EditMessage = (props) => {
                 setRefresh(1);
                 setTimeout(() => setRefresh(0), 1);
             }
+            console.log("Refresh: ",refresh);
         }
     }, [])
 
@@ -54,6 +59,7 @@ export const EditMessage = (props) => {
         }
 
         localStorage.setItem(keyName, JSON.stringify(storedMessage));
+        setDisplayState(999);
     }
 
     return (

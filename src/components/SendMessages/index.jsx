@@ -7,11 +7,11 @@ export const SendMessages = (props) => {
     const [hasClicked, setHasClicked] = useState(0);
     const [sendingMessage, setSendingMessage] = useState(false);
     const emptyString = '';
-    const [firstMessage, setFirstMessage] = useState(true);
+    const [firstMessage, setFirstMessage] = useState(false);
     const [previousKey, setPreviousKey] = useState('');
     const accountSid = "AC328815b6f17c750d80bedcc36bb5f3ce"; // Primary Account
     // const accountSid = "ACf0660d83b54452dd82af793988b69485"; // Testing account
-    const authToken = "90924da28b6854a695c34a12bac34e5a"; // Primary Account
+    const authToken = "833272e0fb1e5011add1721f82cbb429"; // Primary Account
     // const authToken = "bf5cc12a2c492f49030aae72ef397e45"; // Testing account
     var qs = require('qs');
     const twilio = require('twilio');
@@ -31,6 +31,7 @@ export const SendMessages = (props) => {
     const [jobSelected, setJobSelected] = useState(true);
     const [selectedSection, setSelectedSection] = useState(0);
     const [jobList, setJobList] = useState('');
+    console.log(jobSettings);
 
     // Use Effect to determine on launch if message is the first one being sent
     // TODO - Update to determine if in the middle of a part of a key
@@ -66,7 +67,7 @@ export const SendMessages = (props) => {
         setList({PersonsList: tempList.slice(startEnd.start, startEnd.end+1)});
         setTimeout(() => {
             console.log(list);
-            setFirstMessage(true);
+            setFirstMessage(false);
             setLocalPageState(1);
         }, 500);
     }
@@ -81,8 +82,12 @@ export const SendMessages = (props) => {
         });
     }
 
-    const sendMessage = async(sendMessage) => {
+    const sendMessageFunction = async(sendMessage, number) => {
         console.log('entered');
+        let counter = 0;
+        if (number === 0) {
+            return;
+        }
         // Call API
         if (sendMessage) {
             if (firstMessage) {
@@ -151,6 +156,7 @@ export const SendMessages = (props) => {
             console.log(tempList);
             setList(tempList);
         }
+        sendMessageFunction(sendMessage, number-1);
         console.log("setting sendMessage to false");
         setSendingMessage(false);
     }
@@ -158,12 +164,12 @@ export const SendMessages = (props) => {
     const handleSendMessage = (event) => {
         switch(event.keyCode) {
             case 34:
-                sendMessage(false);
+                sendMessageFunction(false, jobSettings.messagesPerKeyPress);
                 break;
             default:
                 if (event.keyCode !== previousKey) {
                     setPreviousKey(event.keyCode);
-                    sendMessage(true);
+                    sendMessageFunction(true, jobSettings.messagesPerKeyPress);
                 }
         }
         if (list.PersonsList.length === 0) {
@@ -193,20 +199,20 @@ export const SendMessages = (props) => {
                     ?<div className = "page">
                         <div className = "SendMessage">
                             <h2> Press page down to skip sending a message to the listed user. </h2>
-                            <h2> Would you like to message {list.PersonsList[list.PersonsList.length - 1].FirstName} {list.PersonsList[list.PersonsList.length - 1].LastName}?</h2>
+                            <h2> Would you like to message {list.PersonsList[list.PersonsList.length - 1].FirstName} {list.PersonsList[list.PersonsList.length - 1].LastName} {jobSettings.messagesPerKeyPress > 1? " and "+ JSON.stringify(jobSettings.messagesPerKeyPress-1) + " more": null}?</h2>
                             <button onClick = {() => {
                             if (!sendingMessage || hasClicked >= 1) {
                                 console.log("setting sendMessage to true");
                                 setHasClicked(0);
                                 setSendingMessage(true);
-                                sendMessage(true);
+                                sendMessageFunction(true, jobSettings.messagesPerKeyPress);
                             }}}> Yes </button>
                             <button onClick = {() => {
                                 if (!sendingMessage || hasClicked >= 1) {
                                     setHasClicked(0);
                                     console.log("setting sendMessage to true");
                                 setSendingMessage(true);
-                                sendMessage(false);
+                                sendMessageFunction(false, jobSettings.messagesPerKeyPress);
                             }}}> No </button>
                             {/* <input onKeyDown = {(event) => {
                             if (!sendingMessage || hasClicked >= 1) {
