@@ -3,6 +3,7 @@ import axios from 'axios';
 
 export const SendMessages = (props) => {
 
+    require("dotenv").config()
     const {list, displayLoaded, setDisplayState, messageList, setList} = props;
     const [hasClicked, setHasClicked] = useState(0);
     const [sendingMessage, setSendingMessage] = useState(false);
@@ -11,7 +12,7 @@ export const SendMessages = (props) => {
     const [previousKey, setPreviousKey] = useState('');
     var qs = require('qs');
     const twilio = require('twilio');
-    const client = new twilio(accountSid, authToken);
+    //const client = new twilio(process.env.mainAccountSid, process.env.mainAuthToken);
     const currentJobKey = JSON.parse(localStorage.getItem('currentJob'))
     let jobSettings = '';
     let message = '';
@@ -82,6 +83,10 @@ export const SendMessages = (props) => {
     const sendMessageFunction = async(sendMessage, number) => {
         console.log('entered');
         let endLoop = false;
+        let counter = 0;
+        if (number === 0) {
+            return;
+        }
         if (list.PersonsList.length === 1) {
             console.log('one person left: checking');
             if (testVar) {
@@ -89,10 +94,6 @@ export const SendMessages = (props) => {
                 return;
             }
             setTestVar(true);
-        }
-        let counter = 0;
-        if (number === 0) {
-            return;
         }
         // Call API
         if (sendMessage) {
@@ -102,44 +103,44 @@ export const SendMessages = (props) => {
                 console.log("Remaining: ",list.PersonsList.length);
                 console.log('+1'+list.PersonsList[list.PersonsList.length - 1].PrimaryPhone);
                 if (list.imageURL !== '') {
-                    await axios.post("https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json", qs.stringify({
-                        Body: message.message,
-                        MediaUrl: message.imageURL,
-                        From: '+17253739818',
-                        To: '+1'+list.PersonsList[list.PersonsList.length - 1].PrimaryPhone
-                    }), {
-                        auth: {
-                        username: process.env.mainAccountSid,
-                        password: process.env.mainAuthToken
-                        }
-                    })
-                    .then (
-                        res => console.log(res)
-                    )
-                    .catch((error) => {
-                        if (error === 400 || error === 401) {
-                            console.log(error);
-                        }
-                    })
+                    // await axios.post("https://api.twilio.com/2010-04-01/Accounts/" + process.env.mainAccountSid + "/Messages.json", qs.stringify({
+                    //     Body: message.message,
+                    //     MediaUrl: message.imageURL,
+                    //     From: '+17253739818',
+                    //     To: '+1'+list.PersonsList[list.PersonsList.length - 1].PrimaryPhone
+                    // }), {
+                    //     auth: {
+                    //     username: process.env.mainAccountSid,
+                    //     password: process.env.mainAuthToken
+                    //     }
+                    // })
+                    // .then (
+                    //     res => console.log(res)
+                    // )
+                    // .catch((error) => {
+                    //     if (error === 400 || error === 401) {
+                    //         console.log(error);
+                    //     }
+                    // })
                 } else {
-                    await axios.post("https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json", qs.stringify({
-                        Body: message.message,
-                        From: '+17253739818',
-                        To: '+1'+list.PersonsList[list.PersonsList.length - 1].PrimaryPhone
-                    }), {
-                        auth: {
-                        username: process.env.mainAccountSid,
-                        password: process.env.mainAuthToken
-                        }
-                    })
-                    .then (
-                        res => console.log(res)
-                    )
-                    .catch((error) => {
-                        if (error === 400 || error === 401) {
-                            console.log(error);
-                        }
-                    })
+                    // await axios.post("https://api.twilio.com/2010-04-01/Accounts/" + process.env.mainAccountSid + "/Messages.json", qs.stringify({
+                    //     Body: message.message,
+                    //     From: '+17253739818',
+                    //     To: '+1'+list.PersonsList[list.PersonsList.length - 1].PrimaryPhone
+                    // }), {
+                    //     auth: {
+                    //     username: process.env.mainAccountSid,
+                    //     password: process.env.mainAuthToken
+                    //     }
+                    // })
+                    // .then (
+                    //     res => console.log(res)
+                    // )
+                    // .catch((error) => {
+                    //     if (error === 400 || error === 401) {
+                    //         console.log(error);
+                    //     }
+                    // })
                 }
                 console.log("Message sent to ", list.PersonsList[list.PersonsList.length - 1].FirstName);
             }
