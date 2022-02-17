@@ -68,7 +68,6 @@ export const EditMessage = (props) => {
                 {isJobSelected
                 ? <div className = "MessageInputs">
                 <MessageBox limitLength = {longMessage} setter={setMessageContents} messageContents={messageContents}/>
-                <CheckBox label="Message &gt; 160 characters" setter={setLongMessage} set={longMessage}/>
                 { displayImageInput? <ImageInput setImageURL = {setImageURL} imageURL = {imageURL}/>: <div />}
                 <CheckBox label="Send Image" setter={setDisplayImageInput} set={displayImageInput}/>
                 <button onClick={() => handleStoreInfo()}> Save </button>

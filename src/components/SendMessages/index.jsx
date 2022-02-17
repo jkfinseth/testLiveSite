@@ -9,10 +9,6 @@ export const SendMessages = (props) => {
     const emptyString = '';
     const [firstMessage, setFirstMessage] = useState(false);
     const [previousKey, setPreviousKey] = useState('');
-    const accountSid = "AC328815b6f17c750d80bedcc36bb5f3ce"; // Primary Account
-    // const accountSid = "ACf0660d83b54452dd82af793988b69485"; // Testing account
-    const authToken = "833272e0fb1e5011add1721f82cbb429"; // Primary Account
-    // const authToken = "bf5cc12a2c492f49030aae72ef397e45"; // Testing account
     var qs = require('qs');
     const twilio = require('twilio');
     const client = new twilio(accountSid, authToken);
@@ -84,6 +80,7 @@ export const SendMessages = (props) => {
 
     const sendMessageFunction = async(sendMessage, number) => {
         console.log('entered');
+        let endLoop = false;
         let counter = 0;
         if (number === 0) {
             return;
@@ -97,14 +94,14 @@ export const SendMessages = (props) => {
                 console.log('+1'+list.PersonsList[list.PersonsList.length - 1].PrimaryPhone);
                 if (list.imageURL !== '') {
                     await axios.post("https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json", qs.stringify({
-                        Body: list.message,
-                        MediaUrl: list.imageURL,
+                        Body: message.message,
+                        MediaUrl: message.imageURL,
                         From: '+17253739818',
                         To: '+1'+list.PersonsList[list.PersonsList.length - 1].PrimaryPhone
                     }), {
                         auth: {
-                        username: accountSid,
-                        password: authToken
+                        username: process.env.mainAccountSid,
+                        password: process.env.mainAuthToken
                         }
                     })
                     .then (
@@ -117,13 +114,13 @@ export const SendMessages = (props) => {
                     })
                 } else {
                     await axios.post("https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json", qs.stringify({
-                        Body: list.message,
+                        Body: message.message,
                         From: '+17253739818',
                         To: '+1'+list.PersonsList[list.PersonsList.length - 1].PrimaryPhone
                     }), {
                         auth: {
-                        username: accountSid,
-                        password: authToken
+                        username: process.env.mainAccountSid,
+                        password: process.env.mainAuthToken
                         }
                     })
                     .then (
@@ -143,6 +140,8 @@ export const SendMessages = (props) => {
         // Update list
         if (list.PersonsList.length === 1) {
             setDisplayState(4);
+            // TODO - Ensure this works
+            endLoop = true;
         } else {
             let tempMessageList = list.PersonsList;
             tempMessageList.pop()
@@ -156,7 +155,9 @@ export const SendMessages = (props) => {
             console.log(tempList);
             setList(tempList);
         }
-        sendMessageFunction(sendMessage, number-1);
+        if (!endLoop) {
+            sendMessageFunction(sendMessage, number-1);
+        }
         console.log("setting sendMessage to false");
         setSendingMessage(false);
     }
