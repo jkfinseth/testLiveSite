@@ -28,6 +28,7 @@ export const SendMessages = (props) => {
     const [selectedSection, setSelectedSection] = useState(0);
     const [jobList, setJobList] = useState('');
     console.log(jobSettings);
+    const [testVar, setTestVar] = useState(false);
 
     // Use Effect to determine on launch if message is the first one being sent
     // TODO - Update to determine if in the middle of a part of a key
@@ -81,6 +82,14 @@ export const SendMessages = (props) => {
     const sendMessageFunction = async(sendMessage, number) => {
         console.log('entered');
         let endLoop = false;
+        if (list.PersonsList.length === 1) {
+            console.log('one person left: checking');
+            if (testVar) {
+                setTestVar(false);
+                return;
+            }
+            setTestVar(true);
+        }
         let counter = 0;
         if (number === 0) {
             return;
@@ -144,13 +153,16 @@ export const SendMessages = (props) => {
             endLoop = true;
         } else {
             let tempMessageList = list.PersonsList;
-            tempMessageList.pop()
+            let tempHolder = tempMessageList.pop()
             // let tempList = {
             //     user: list.user,
             //     imageURL: list.imageURL,
             //     message: list.message,
             //     PersonsList: messageList
             // }
+            if (tempHolder == tempMessageList) {
+                endLoop = true;
+            }
             let tempList = {PersonsList: tempMessageList};
             console.log(tempList);
             setList(tempList);
