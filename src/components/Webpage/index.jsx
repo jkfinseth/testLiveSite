@@ -11,6 +11,7 @@ import { SendMessages } from "../SendMessages";
 import { SelectJobPage } from "../SelectJobPage";
 import { UploadSpreadsheetPage } from "../UploadSpreadsheetPage";
 import { JobSettings } from "../JobSettings";
+import { DeleteSelectedJobPage } from "../TempDeleteJob";
 
 export const MessagingSite = (props) => {
     const [isListSplit, setIsListSplit] = useState(false);
@@ -24,6 +25,8 @@ export const MessagingSite = (props) => {
     const [displayLoaded, setDisplayLoaded] = useState(false);
     const [firstMessage, setFirstMessage] = useState(true);
     const [imageURL, setImageURL] = useState('');
+
+    console.log("HEY: ",process.env.REACT_APP_HELLOWORLD);
     
 
     /*
@@ -149,7 +152,9 @@ export const MessagingSite = (props) => {
                 ? <UploadSpreadsheetPage setDisplayState = {setDisplayState}/>
                 :displayState === 7
                 ? <JobSettings setDisplayState = {setDisplayState}/>
-                : <div />     
+                :displayState === 8
+                ? <DeleteSelectedJobPage setDisplayState = {setDisplayState}/>
+                :<div />     
                     }
             </div>
         );

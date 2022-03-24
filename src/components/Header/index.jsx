@@ -36,6 +36,11 @@ export const Header = (props) => {
                         <h3>Job Settings</h3>
                     </div>
                 </button>
+                <button onClick = {() => setDisplay(8)}>
+                    <div className = "buttonBackground">
+                        <h3>Delete Job</h3>
+                    </div>
+                </button>
                 <button>
                     <div className = "buttonBackground">
                         <h3>Manage Users</h3>
